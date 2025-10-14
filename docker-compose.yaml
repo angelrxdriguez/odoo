@@ -1,0 +1,43 @@
+
+services:
+  web:
+    container_name: ${WEB_HOST:-odoo-web}
+    image: ${WEB_IMAGE_NAME:-odoo:17.0}
+    depends_on:
+      - db
+    ports:
+      - "${WEB_PORT:-8069}:8069"
+      - "${WEBSOCKET_PORT:-8072}:8072"
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    entrypoint: ["/usr/bin/odoo", "-c", "/etc/odoo/odoo.conf"]
+
+  db:
+    container_name: ${DB_HOST:-odoo-db}
+    image: ${DB_IMAGE:-postgres:16}
+    environment:
+      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-odoo}
+      POSTGRES_USER: ${DB_USER:-odoo}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata"
+--- prueba que hice para ver la bd pero no funcionó, como no era parte de la práctica lo dejo ahi por si a caso en el futuro
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - db
+---
+volumes:
+  odoo-db-data:
+  odoo-web-data:
