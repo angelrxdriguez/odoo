@@ -1,0 +1,186 @@
+\documentclass[a4paper,12pt]{article} 
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Más espacio entre párrafos y sin sangría
+\setlength{\parskip}{0.8em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+\begin{center}
+{\LARGE Práctica 3: Primeros módulos Odoo}
+
+\vspace{2cm}
+
+\includegraphics[width=0.3\textwidth]{logo.png}
+\end{center}
+\vspace{5cm}
+
+\bigskip\bigskip
+
+Indice
+
+\begin{itemize}
+  \item 0. CONTEXTO Y PASOS PREVIOS
+  \item 1. MODULO HOLA MUNDO
+  \item 2. MODULO LISTA DE TAREAS
+  \item 3.Realizar un mejora en el modulo.
+\end{itemize}
+
+\bigskip\bigskip
+
+0. CONTEXTO Y PASOS PREVIOS
+
+En este documento explicare de forma sencilla los pasos que he seguido para crear y mejorar mis primeros módulos en Odoo.
+
+Además de describir los comandos que he utilizado, quiero dejar por escrito el contexto de trabajo: estoy usando una instalación de Odoo levantada con \textit{docker compose}, con un contenedor para la aplicación web y otro para la base de datos. El objetivo principal de esta práctica es entender la estructura básica de un módulo, cómo se instala desde la interfaz de Odoo y cómo se pueden hacer pequeñas mejoras sobre un módulo ya generado.
+
+-Pasos previos
+
+-Activar el modo de desarrollador
+
+para activar el modo desarrollador nos deberemos ir a los ajustes de odoo -> Luego haremos click en Activar Modo Desarrollador.
+
+Gracias a este modo, se habilitan opciones adicionales en el menú, como la posibilidad de ver la información técnica de los registros, depurar vistas, acceder al listado de módulos instalados y recargar la lista de aplicaciones después de añadir un nuevo módulo en la carpeta de addons.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{desarrollador.png}
+\caption{Imagen de la opción}
+\end{figure}
+
+\bigskip\bigskip
+
+1. MODULO HOLA MUNDO
+
+Lo primero que he hecho ha sido entrar en mi carpeta de odoo (entregada en la primera practica)
+y creado dentro de la carpeta de addons (en su día di de alta con el docker\_compose), la carpeta "holamundo".
+
+Dentro de esta carpeta, he metido 2 archivos. Un archivo con el nombre : \texttt{\_\_init\_\_.py} y otro con el nombre \texttt{\_\_manifest\_\_.py}.
+
+El módulo Hola Mundo me sirve como prueba mínima para comprobar que Odoo detecta correctamente los módulos personalizados que añado en la ruta de addons. Es un ejemplo sencillo pero muy útil para verificar que la configuración del entorno con Docker está bien hecha y que los permisos de las carpetas permiten que Odoo lea el contenido del módulo sin errores.
+
+Dentro del manifest he insertado el nombre que tendrá. Para ello, he insertado dentro del archivo lo siguiente:
+
+\begin{verbatim}
+{
+    'name': 'Ejemplo Hola mundo',
+}
+\end{verbatim}
+
+El fichero \texttt{\_\_init\_\_.py} se utiliza para indicar a Odoo qué paquetes de Python se deben cargar al iniciar el módulo. En módulos más complejos, desde este archivo se suele importar la carpeta \texttt{models} y otros submódulos. El archivo \texttt{\_\_manifest\_\_.py} contiene la información básica del módulo: nombre, versión, dependencias, datos que se cargan, etc. En mi caso solo he definido el campo \texttt{'name'}, pero en un manifest real también se podrían añadir otros campos como \texttt{'version'}, \texttt{'depends'} o \texttt{'data'}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{manifest.py.png}
+\caption{Imagen del código}
+\end{figure}
+
+Luego, para forzar la recarga del módulo. Debemos reiniciar el contenedor:
+
+\begin{verbatim}
+docker compose restart odoo
+\end{verbatim}
+
+Luego , tras abrir odoo en nuestro navegador, podremos visionar el modulo para instalar
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{holamundo.png}
+\caption{Imagen del módulo}
+\end{figure}
+
+\begin{verbatim}
+Problemas ocasionados:
+Para que el módulo apareciese, tumbe y levante el contenedor de odoo.
+Debido a un problema en mi código del ".yaml", el contenedor se levantó sobreescribiendo la anterior base de datos.
+A partir de ahora, es suficiente con reiniciar el contenedor web.
+docker compose restart web
+ 
+\end{verbatim}
+
+Este problema me ha servido para entender mejor la diferencia entre reiniciar un contenedor y recrearlo desde cero. Al recrearlo, perdí la base de datos anterior porque no estaba usando correctamente los volúmenes de Docker. A partir de este error he aprendido que, cuando solo quiero que Odoo vuelva a detectar cambios en el código de un módulo, basta con hacer un \texttt{docker compose restart} del servicio correspondiente, sin borrar ni recrear toda la configuración.
+\vspace{2cm}
+
+\textbf{Resumen de funcionamiento:} este módulo de Hola Mundo no hace nada especial en Odoo, solo aparece en la lista de módulos cuando actualizamos las aplicaciones en modo desarrollador y se puede instalar. Nos sirve para comprobar que la carpeta del módulo y los archivos \texttt{\_\_init\_\_.py} y \texttt{\_\_manifest\_\_.py} están bien creados y que Odoo detecta correctamente los módulos que añadimos.
+
+\bigskip\bigskip
+
+2. MODULO LISTA DE TAREAS
+
+Con el modulo de desarrollador activado, ejecutaremos el scaffold dentro el contenedor web.
+Para ello ejecutamos:
+
+\begin{verbatim}
+docker compose exec web odoo scaffold lista_tareas /mnt/extra-addons
+\end{verbatim}
+
+Si lo hicimos bien, se nos habrá creado la estructura de la carpeta del módulo de listatareas.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{carpetaslistatareas.png}
+\caption{Imagen de las carpetas del módulo}
+\end{figure}
+
+Ahora haremos un paso opcional pero que hará que el proceso de los módulos sea mas cómodo (En windows):
+
+\begin{verbatim}
+docker compose exec web bash -lc "chmod -R 777 /mnt/extra-addons/lista_tareas"
+\end{verbatim}
+
+Una vez hecho esto, con la estructura montada, rellenaremos los ficheros del módulo.
+Dentro de /addons/\texttt{lista\_tareas} rellenaremos los archivos tal cual nos dice el ejemplo de la documentación otorgada.
+
+En este módulo se define un modelo sencillo de lista de tareas. Entre los campos principales que se pueden definir están: el nombre de la tarea, la prioridad, un campo booleano para marcar si está realizada y otros campos auxiliares que ayudan a organizar el trabajo. Además, se crean vistas de lista y formulario para poder gestionar las tareas desde la interfaz web de Odoo.
+
+Los ficheros más importantes que genera el comando \texttt{scaffold} para este módulo son:
+
+\begin{itemize}
+  \item \texttt{models/lista\_tareas.py}: donde se define la clase del modelo y sus campos.
+  \item \texttt{views/lista\_tareas\_views.xml}: donde se definen las vistas de lista y de formulario.
+  \item \texttt{\_\_manifest\_\_.py}: donde se declara el módulo y los datos que se van a cargar.
+  \item \texttt{security/ir.model.access.csv}: donde se configuran los permisos de acceso al modelo.
+\end{itemize}
+
+Gracias a este módulo he podido practicar cómo se relaciona la parte de Python (modelo de datos) con la parte de XML (vistas) y con los permisos de seguridad, que son necesarios para que el usuario pueda ver y editar los registros desde Odoo.
+
+\vspace{2cm}
+
+\textbf{Resumen de funcionamiento:} este módulo de lista de tareas ya es un módulo “de verdad” creado con \texttt{odoo scaffold}. Ese comando le dice a Odoo que nos prepare toda la estructura básica de un módulo: el \texttt{\_\_manifest\_\_.py} para describir el módulo, el \texttt{\_\_init\_\_.py} para cargar la lógica, la carpeta \texttt{models} para el modelo de datos, la carpeta \texttt{views} para las vistas y menús, y la parte de \texttt{security} para los permisos. A partir de esa base, el módulo añade un modelo nuevo de tareas en \texttt{models/lista\_tareas.py}, unas vistas y menús en \texttt{views/lista\_tareas\_views.xml} y sus reglas de acceso en \texttt{security/ir.model.access.csv}, de forma que las tareas se pueden crear, ver y editar dentro de Odoo como una aplicación más.
+
+\bigskip\bigskip
+
+3.Realizar un mejora en el modulo.
+
+He pensado en que la lista de tareas, al ser compartida, estaría bien que tuviese un campo de responsable. De esta manera, cada uno hace el seguimiento oportuno de sus tareas asignadas. Para hacerlo, he añadido dentro en views.xml un simple <field name = "responsable"/> con el mismo formato que el resto de fields. El resto lo he dejado igual.
+
+Luego, simplemente he añadido a la clase de ListaTareas :
+ responsable = fields.Char(string="Responsable"). Tras esto, he modificado el modulo de forma que ahora, pueda asignar un responsable:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{moduloresponsable.png}
+\caption{Campo responsable}
+\end{figure}
+
+Además de añadir el campo, he comprobado que aparece correctamente tanto en la vista de lista como en la vista de formulario y que se guarda en la base de datos al crear o editar una tarea. Esta mejora, aunque es pequeña, demuestra cómo a partir de un módulo generado con \texttt{scaffold} se pueden ir incorporando nuevos campos y adaptando el módulo a las necesidades reales de los usuarios.
+
+También he podido comprobar cómo al actualizar el código del módulo es necesario actualizar la aplicación desde el menú de Odoo para que se apliquen los cambios en las vistas y en el modelo de datos. Esto forma parte del ciclo normal de desarrollo: modificar código, actualizar el módulo y probar de nuevo en la interfaz.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{tarea.png}
+\caption{Campo responsable}
+\end{figure}
+\vspace{2cm}
+
+\textbf{Resumen de funcionamiento:} en esta mejora no creo un módulo nuevo, sino que aprovecho la estructura que generó \texttt{odoo scaffold} y la amplío un poco. Por un lado, añado el campo \texttt{responsable} al modelo en \texttt{models/lista\_tareas.py}, y por otro lado lo muestro en las vistas editando el \texttt{views.xml}. Con esto, el módulo sigue funcionando igual que antes, pero ahora cada tarea guarda también quién es el responsable y esa información viaja desde la base de datos a la pantalla (y al revés) usando los mismos ficheros del módulo.
+
+
+
+\end{document}
