@@ -1,0 +1,19 @@
+Actividad 02
+Amplía el módulo del ejemplo de la biblioteca de cómics para que: 
+1. Incluya la posibilidad de gestionar socios, almacenando su nombre, apellido e
+identificador. 
+2. Introduzca la opción de que existan ejemplares de cómics para préstamo. 
+o El modelo actual de cómic servirá como referencia de la información del
+cómic. 
+o Deberás crear un nuevo modelo para gestionar los ejemplares
+prestables de cada cómic.
+
+3. Estos ejemplares de préstamo deben registrar: 
+o A quién están prestados (socio). 
+o La fecha de inicio y fecha de fin del préstamo. 
+o No es necesario mantener un histórico de préstamos, solo quién tiene
+el cómic actualmente, cuándo se prestó y la fecha prevista de
+devolución.
+4. Restricciones: 
+o La fecha de préstamo no puede ser posterior al día actual. 
+o La fecha prevista de devolución no puede ser anterior al día actual.

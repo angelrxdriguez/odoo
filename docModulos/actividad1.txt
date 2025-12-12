@@ -1,0 +1,32 @@
+Actividad 01
+Modifica el ejemplo más sencillo de la lista de tareas para que:
+1. Tenga una nueva vista para ver las tareas en formato "Kanban".
+
+para la primera tarea 
+modifique solo el views.xml
+restart web
+docker compose exec web odoo -u lista_tareas -d odoo
+
+Lo primero que vamos a hacer será crear un nuevo campo de estados, para ello:
+-Definimos el nuevo campo de estados en el archivo models.py
+{img/estados.png}
+Me he basado en el típico ejemplo de "KANBAN TO DO" con 3 estados.
+Los estados son
+- POR HACER : 'todo'
+- HACIENDO : 'doing'
+- HECHO : 'done'
+Luego, en el views.xml:
+-Añadimos el campo de :
+<field name="estado"/> 
+Tanto en la vista de lista como en la vista KANBAN
+Dentro del Template de kanban, debemos añadir el campo de estado:
+ <t t-name="kanban-box">
+                                  <div>
+                                    Estado: <field name="estado"/>
+                                </div>
+Esto hará que visualicemos el dato en la carta.
+Luego, especificaremos en el contenedor de acción, que agrupe según el campo de "Estado":
+{img/groupby.png}
+A mayores, le he puesto que por defecto (sino recupera el dato, que no se porque no iba a poder recuperarlo) ponga "todo", codigo de 'Por hacer'.
+{img/kanba.png}
+Este es el resultado, se va actualizando a medida que vamos cambiando los estados de las tareas.
