@@ -19,8 +19,9 @@ class ListaTareas(models.Model):
         string="Estado",
         default='todo',
     )
-
+    fecha = fields.Date(string="Fecha") 
     @api.depends('prioridad')
     def _value_urgente(self):
         for record in self:
             record.urgente = record.prioridad > 10
+ 

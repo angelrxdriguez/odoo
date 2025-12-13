@@ -30,3 +30,30 @@ Luego, especificaremos en el contenedor de acción, que agrupe según el campo d
 A mayores, le he puesto que por defecto (sino recupera el dato, que no se porque no iba a poder recuperarlo) ponga "todo", codigo de 'Por hacer'.
 {img/kanba.png}
 Este es el resultado, se va actualizando a medida que vamos cambiando los estados de las tareas.
+2. Modifica las tareas para que tengna una fecha asignada y crea una nueva vista para visualizarlas en un formato "Calendario" segun esa fecha
+Para realizar esto, vamos a añadir la etiqeuta calenmdar al viewmode. Esto sirve para activar la vista de calendario.
+
+Vamos al archivo models.py y añadimos la variable fecha:
+    fecha = fields.Date(string="Fecha") 
+Aclaramos que será un campo de tipo date.
+Luego, accedemos al archivo de views.xml
+Una vez estemos dentro del fichero, añadimos al igual que hicimos con el campo de estado. El campo de fecha:
+<field name="fecha"/>
+
+Lógicamente, como hicimos con la vista de kanban, tendremos que crear una nueva vista para que se mire en formato calendario.
+Esta vista será la vista .calendar, mostraremos cada tarea en formato calendario a partir de un campo date.
+Para ello, añadí el siguiente bloque dentro de las vistas (data)
+<record model="ir.ui.view" id="lista_tareas.calendar">
+    <field name="name">lista_tareas calendar</field>
+    <field name="model">lista_tareas.lista_tareas</field>
+    <field name="arch" type="xml">
+        <calendar date_start="fecha" string="Calendario de tareas">
+            <field name="tarea"/>
+        </calendar>
+    </field>
+</record>
+Una vez creada la vista, debemos aclarar el view_mode con el formato correcto - CALENDAR
+ <field name="view_mode">kanban,tree,calendar,form</field>
+
+ Actualizar web. Como siempre, tras realizar los cambios, lanzamos por la cmd:
+ docker compose restart web
