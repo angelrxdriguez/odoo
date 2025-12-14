@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="biblioteca_ejemplar_view_tree" model="ir.ui.view">
+        <field name="name">biblioteca.ejemplar.tree</field>
+        <field name="model">biblioteca.ejemplar</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="codigo"/>
+                <field name="comic_id"/>
+                <field name="estado"/>
+                <field name="socio_id"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="biblioteca_ejemplar_view_form" model="ir.ui.view">
+        <field name="name">biblioteca.ejemplar.form</field>
+        <field name="model">biblioteca.ejemplar</field>
+        <field name="arch" type="xml">
+            <form string="Ejemplar">
+                <group>
+                    <field name="codigo"/>
+                    <field name="comic_id"/>
+                    <field name="estado" readonly="1"/>
+                </group>
+                <group string="Préstamo actual">
+                    <field name="socio_id"/>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="biblioteca_ejemplar_action" model="ir.actions.act_window">
+        <field name="name">Ejemplares</field>
+        <field name="res_model">biblioteca.ejemplar</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="biblioteca_ejemplar_menu"
+              name="Ejemplares"
+              parent="biblioteca_base_menu"
+              action="biblioteca_ejemplar_action"/>
+</odoo>

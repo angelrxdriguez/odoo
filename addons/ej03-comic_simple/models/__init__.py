@@ -3,3 +3,4 @@
 # Si creamos mas modelos, deben importarse en este fichero
 from . import biblioteca_comic
 from . import socio
+from . import ejemplar

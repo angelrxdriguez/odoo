@@ -63,6 +63,12 @@ class BibliotecaComic(models.Model):
 
     #Fecha de publicación
     fecha_publicacion = fields.Date('Fecha publicación')
+    #Relacion uno a muchos con ejemplares
+    ejemplar_ids = fields.One2many(
+    comodel_name="biblioteca.ejemplar",
+    inverse_name="comic_id",
+    string="Ejemplares",
+    )
 
     #Precio del libro    
     precio = fields.Float('Precio')
