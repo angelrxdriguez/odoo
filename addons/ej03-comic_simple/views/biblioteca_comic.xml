@@ -3,18 +3,22 @@
 
     <!-- Definimos como mostramos la vista en el modelo -->
     <record id='biblioteca_comic_action' model='ir.actions.act_window'>
-        <field name="name">Biblioteca de Comics</field>
+        <field name="name">Biblioteca de Comicss</field>
         <!-- Indicamos a que modelo aplica -->
         <field name="res_model">biblioteca.comic</field>
         <!-- Indicamos que los comics pueden verse en tree para el listado,
             y en form para la creación/edición -->
         <field name="view_mode">tree,form</field>
     </record>
-
+  <record id="biblioteca_socio_action" model="ir.actions.act_window">
+        <field name="name">Socios</field>
+        <field name="res_model">biblioteca.socio</field>
+        <field name="view_mode">tree,form</field>
+    </record>
     <!-- Simple menu item, sin más utilidad que la didáctica -->
     <menuitem name="Mi biblioteca (Simple)" id="biblioteca_base_menu" />
     <menuitem name="Comics" id="biblioteca_comic_menu" parent="biblioteca_base_menu" action="biblioteca_comic_action"/>
-
+<menuitem id="biblioteca_socio_menu" name="Socios" parent="biblioteca_base_menu" action="biblioteca_socio_action"/>
     <!-- Definición de la Vista formulario -->
     <record id="biblioteca_comic_view_form" model="ir.ui.view">
         <field name="name">Formulario de Comic de la biblioteca</field>
@@ -70,6 +74,31 @@
             </tree>
         </field>
     </record>
+<record id="biblioteca_socio_tree" model="ir.ui.view">
+    <field name="name">biblioteca.socio.tree</field>
+    <field name="model">biblioteca.socio</field>
+    <field name="arch" type="xml">
+        <tree>
+            <field name="identificador"/>
+            <field name="nombre"/>
+            <field name="apellido"/>
+        </tree>
+    </field>
+</record>
+
+<record id="biblioteca_socio_form" model="ir.ui.view">
+    <field name="name">biblioteca.socio.form</field>
+    <field name="model">biblioteca.socio</field>
+    <field name="arch" type="xml">
+        <form string="Socio">
+            <group>
+                <field name="identificador"/>
+                <field name="nombre"/>
+                <field name="apellido"/>
+            </group>
+        </form>
+    </field>
+</record>
 
     <!-- Definición de la vista busqueda-->
     <record id="biblioteca_comic_view_search" model="ir.ui.view">
