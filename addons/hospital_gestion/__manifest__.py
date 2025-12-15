@@ -6,10 +6,10 @@
     "depends": ["base"],
     "data": [
         "security/ir.model.access.csv",
-        "views/menus.xml",
         "views/paciente_views.xml",
         "views/medico_views.xml",
         "views/consulta_views.xml",
+        "views/menus.xml"
     ],
     "application": True,
     "installable": True,

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="hospital_menu_root" name="Hospital"/>
+
+    <menuitem id="hospital_menu_pacientes"
+              name="Pacientes"
+              parent="hospital_menu_root"
+              action="hospital_paciente_action"/>
+
+    <menuitem id="hospital_menu_medicos"
+              name="Médicos"
+              parent="hospital_menu_root"
+              action="hospital_medico_action"/>
+
+    <menuitem id="hospital_menu_consultas"
+              name="Consultas"
+              parent="hospital_menu_root"
+              action="hospital_consulta_action"/>
+
+</odoo>
