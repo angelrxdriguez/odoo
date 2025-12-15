@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="instituto_ciclo_tree" model="ir.ui.view">
+    <field name="name">instituto.ciclo.tree</field>
+    <field name="model">instituto.ciclo</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="instituto_ciclo_form" model="ir.ui.view">
+    <field name="name">instituto.ciclo.form</field>
+    <field name="model">instituto.ciclo</field>
+    <field name="arch" type="xml">
+      <form string="Ciclo formativo">
+        <group>
+          <field name="name"/>
+        </group>
+        <group string="Módulos">
+          <field name="modulo_ids">
+            <tree>
+              <field name="name"/>
+              <field name="profesor_id"/>
+            </tree>
+          </field>
+        </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="instituto_ciclo_action" model="ir.actions.act_window">
+    <field name="name">Ciclos</field>
+    <field name="res_model">instituto.ciclo</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+</odoo>

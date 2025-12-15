@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <menuitem id="instituto_menu_root" name="Instituto"/>
+
+  <menuitem id="instituto_menu_ciclos" name="Ciclos"
+            parent="instituto_menu_root" action="instituto_ciclo_action"/>
+
+  <menuitem id="instituto_menu_modulos" name="Módulos"
+            parent="instituto_menu_root" action="instituto_modulo_action"/>
+
+  <menuitem id="instituto_menu_alumnos" name="Alumnos"
+            parent="instituto_menu_root" action="instituto_alumno_action"/>
+
+  <menuitem id="instituto_menu_profesores" name="Profesores"
+            parent="instituto_menu_root" action="instituto_profesor_action"/>
+</odoo>

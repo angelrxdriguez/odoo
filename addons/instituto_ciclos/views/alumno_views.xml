@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="instituto_alumno_tree" model="ir.ui.view">
+    <field name="name">instituto.alumno.tree</field>
+    <field name="model">instituto.alumno</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="instituto_alumno_form" model="ir.ui.view">
+    <field name="name">instituto.alumno.form</field>
+    <field name="model">instituto.alumno</field>
+    <field name="arch" type="xml">
+      <form string="Alumno">
+        <group>
+          <field name="name"/>
+        </group>
+        <group string="Módulos matriculados">
+          <field name="modulo_ids" widget="many2many_tags"/>
+        </group>
+      </form>
+    </field>
+  </record>
+
+  <record id="instituto_alumno_action" model="ir.actions.act_window">
+    <field name="name">Alumnos</field>
+    <field name="res_model">instituto.alumno</field>
+    <field name="view_mode">tree,form</field>
+  </record>
+</odoo>

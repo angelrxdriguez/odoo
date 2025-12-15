@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_instituto_ciclo_read,instituto.ciclo read,model_instituto_ciclo,base.group_user,1,0,0,0
+access_instituto_modulo_read,instituto.modulo read,model_instituto_modulo,base.group_user,1,0,0,0
+access_instituto_alumno_read,instituto.alumno read,model_instituto_alumno,base.group_user,1,0,0,0
+
+access_instituto_profesor_read_prof,instituto.profesor read profesor,model_instituto_profesor,instituto_ciclos.group_instituto_profesor,1,0,0,0
+access_instituto_profesor_full_dir,instituto.profesor full director,model_instituto_profesor,instituto_ciclos.group_instituto_director,1,1,1,1
+
+access_instituto_ciclo_full_dir,instituto.ciclo full director,model_instituto_ciclo,instituto_ciclos.group_instituto_director,1,1,1,1
+access_instituto_modulo_full_dir,instituto.modulo full director,model_instituto_modulo,instituto_ciclos.group_instituto_director,1,1,1,1
+access_instituto_alumno_full_dir,instituto.alumno full director,model_instituto_alumno,instituto_ciclos.group_instituto_director,1,1,1,1
