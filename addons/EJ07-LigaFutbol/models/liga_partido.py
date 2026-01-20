@@ -68,12 +68,36 @@ class LigaPartido(models.Model):
             recordEquipo.derrotas=0
             recordEquipo.goles_a_favor=0
             recordEquipo.goles_en_contra=0
-            
+            recordEquipo.puntos=0
+
             for recordPartido in self.env['liga.partido'].search([]):  
-        
+                puntos_local=0 #declaro los puntos del local y visitante
+                puntos_visitante=0
+                #si hay empate
+                if recordPartido.goles_casa==recordPartido.goles_fuera:
+                    puntos_local=1
+                    puntos_visitante=1
+                else: #no hay empate - calculo diferencia
+                    diferencia = recordPartido.goles_casa - recordPartido.goles_fuera
+                #local si...
+                    if diferencia>0:
+                        if diferencia>=4:
+                            puntos_local=4
+                            puntos_visitante= -1
+                        else:
+                            puntos_local=3
+                            puntos_visitante=0
+                #visitante sino...
+                    else:
+                        if diferencia<=-4:
+                            puntos_local=-1
+                            puntos_visitante=4
+                        else:
+                            puntos_visitante=3
+                            puntos_local=0
                 #Si es el equipo de casa
                 if recordPartido.equipo_casa.nombre==recordEquipo.nombre:
-                    
+                    recordEquipo.puntos = recordEquipo.puntos + puntos_local
                     #Miramos si es victoria o derrota
                     if recordPartido.goles_casa>recordPartido.goles_fuera:
                         recordEquipo.victorias=recordEquipo.victorias+1
@@ -88,7 +112,7 @@ class LigaPartido(models.Model):
 
                 #Si es el equipo de fuera
                 if recordPartido.equipo_fuera.nombre==recordEquipo.nombre:
-                    
+                    recordEquipo.puntos = recordEquipo.puntos + puntos_visitante
                     #Miramos si es victoria o derrota
                     if recordPartido.goles_casa<recordPartido.goles_fuera:
                         recordEquipo.victorias=recordEquipo.victorias+1
