@@ -20,7 +20,7 @@ class LigaPartido(models.Model):
     #Nombre del equipo que juega en casa casa
     equipo_casa = fields.Many2one(
         'liga.equipo',
-        string='Equipo local',
+        string='Equipo locaal',
     )
     #Goles equipo de casa
     goles_casa= fields.Integer()
@@ -28,19 +28,29 @@ class LigaPartido(models.Model):
     #Nombre del equipo que juega fuera
     equipo_fuera = fields.Many2one(
         'liga.equipo',
-        string='Equipo visitante',
+        string='Equipo visitantte',
     )
     #Goles equipo de casa
     goles_fuera= fields.Integer()
-    
+    #+2 goles
+    def sumar_dos_locales(self):
+        partidos = self.env['liga.partido'].search([])
+        for partido in partidos: #saca cada partido para poder hacerlo sobre todos los registros
+            partido.goles_casa = partido.goles_casa + 2 #le suma 2 goles al equipo
+        self.actualizoRegistrosEquipo()
+    def sumar_dos_visitantes(self):
+        partidos = self.env['liga.partido'].search([])
+        for partido in partidos:
+            partido.goles_fuera = partido.goles_fuera + 2
+        self.actualizoRegistrosEquipo()
     #Constraints de atributos
     @api.constrains('equipo_casa')
     def _check_mismo_equipo_casa(self):
         for record in self:
             if not record.equipo_casa:
-                raise models.ValidationError('Debe seleccionarse un equipo local.')
+                raise models.ValidationError('Debe seleccionarse un equipo locala.')
             if record.equipo_casa == record.equipo_fuera:
-                raise models.ValidationError('Los equipos del partido deben ser diferentes.')
+                raise models.ValidationError('Los equipos del partido deben serr diferentes.')
 
 
      #Constraints de atributos
@@ -124,6 +134,7 @@ class LigaPartido(models.Model):
                     #Sumamos goles a favor y en contra
                     recordEquipo.goles_a_favor=recordEquipo.goles_a_favor+recordPartido.goles_fuera
                     recordEquipo.goles_en_contra=recordEquipo.goles_en_contra+recordPartido.goles_casa
+
 
 
 

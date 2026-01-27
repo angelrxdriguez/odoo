@@ -2,7 +2,7 @@
 <odoo>
 
     <record id='liga_partido_action' model='ir.actions.act_window'>
-        <field name="name">Partidos de la liga</field>
+        <field name="name">Partidos de la ligaA</field>
         <!-- Indicamos vistas para este modelo (categoria) -->
         <field name="res_model">liga.partido</field>
         <!-- Indicamos que este modelo se puede ver en kanban, tree y form -->
@@ -13,10 +13,18 @@
 
     <!-- VISTA DE FORMULARIO -->
     <record id="liga_partido_view_form" model="ir.ui.view">
-        <field name="name">Formulario Partidos</field>
+        <field name="name">Formulario PartidDos</field>
         <field name="model">liga.partido</field>
         <field name="arch" type="xml">
             <form>
+            <header>
+            <button name="sumar_dos_locales"
+                type="object"
+                string="+2 goles locales!"/>
+            <button name="sumar_dos_visitantes"
+                type="object"
+                string="+2 goles visitantes!"/>
+            </header>
                 <group>
                     <group>
                         <field name="equipo_casa" />
