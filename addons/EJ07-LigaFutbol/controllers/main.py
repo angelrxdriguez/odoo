@@ -21,3 +21,18 @@ class Main(http.Controller):
         json_result=json.dumps(listaDatosEquipos)
 
         return json_result
+    @http.route('/eliminarempates', type='http', auth='none')
+    def eliminarEmpates(self, **kw):
+        partidos = request.env['liga.partido'].sudo().search([])
+
+        empates = []
+        for p in partidos:
+            if p.goles_casa == p.goles_fuera:
+                empates.append(p)
+
+        eliminados = len(empates)
+        for p in empates:
+            p.unlink()
+
+        return "Partidos eliminados: %s" % eliminados
+
