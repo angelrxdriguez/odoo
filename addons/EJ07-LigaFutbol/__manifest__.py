@@ -25,7 +25,7 @@
         #Y en www.odoo.yenthevg.com/creating-security-groups-odoo/
         #'security/groups.xml',
         'security/ir.model.access.csv',
-
+        'report/liga_partido_informe.xml',
         #Aqui distintas vistas de equipo (vistas diferentes, mismo modelo)
         'views/liga_equipo.xml',
         'views/liga_equipo_clasificacion.xml',

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report
+        id="liga_partido_informe"
+        model="liga.partido"
+        string="Informe Partido"
+        report_type="qweb-pdf"
+        name="EJ07-LigaFutbol.liga_partido_informe_template"
+        file="EJ07-LigaFutbol.liga_partido_informe_template"
+    />
+    <template id="liga_partido_informe_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Informe de Partido</h2>
+
+                    <t t-foreach="docs" t-as="p">
+                        <p><b>Equipo local:</b> <span t-esc="p.equipo_casa.nombre"/></p>
+                        <p><b>Goles local:</b> <span t-esc="p.goles_casa"/></p>
+
+                        <p><b>Equipo visitante:</b> <span t-esc="p.equipo_fuera.nombre"/></p>
+                        <p><b>Goles visitante:</b> <span t-esc="p.goles_fuera"/></p>
+
+                        <p><b>Resultado:</b>
+                            <span t-esc="p.goles_casa"/> - <span t-esc="p.goles_fuera"/>
+                        </p>
+                    </t>
+
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
