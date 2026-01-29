@@ -117,5 +117,15 @@
             </kanban>
         </field>
     </record>
+<record id="liga_partido_view_graph" model="ir.ui.view">
+    <field name="name">Goles locales por equipo</field>
+    <field name="model">liga.partido</field>
+    <field name="arch" type="xml">
+        <graph string="Goles marcados por equipos locales" type="bar">
+            <field name="equipo_casa" type="row"/>
+            <field name="goles_casa" type="measure"/>
+        </graph>
+    </field>
+</record>
 
 </odoo>
