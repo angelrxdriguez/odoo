@@ -5,7 +5,7 @@
 
     <!-- Tree(list) View -->
     <record id="liga_equipo_clasificacion_view_tree" model="ir.ui.view">
-        <field name="name">Lista de Equipos de la liga</field>
+        <field name="name">Lista de Equipos de la ligaA</field>
         <field name="model">liga.equipo</field>
         <field name="arch" type="xml">
             <!-- Indicamos el orden para poner la clasificacion-->

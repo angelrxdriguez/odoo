@@ -7,6 +7,7 @@ class LigaPartido(models.Model):
     #Nombre y descripcion del modelo
     _name = 'liga.partido'
     _description = 'Un partido de la liga'
+    jornada = fields.Integer(string='Jornada')
 
 
     #Atributos del modelo
