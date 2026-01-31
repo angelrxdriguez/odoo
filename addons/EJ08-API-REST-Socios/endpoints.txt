@@ -1,0 +1,14 @@
+
+GET /gestion/socio (y en general: GET /gestion/<modelo>)
+http://localhost:8069/gestion/apirest/socio?data={"num_socio":1}
+API REST CRUD (por num_socio)
+
+POST /gestion/apirest/socio (crear)
+
+PUT /gestion/apirest/socio (modificar)
+
+PATCH /gestion/apirest/socio (modificar parcial)
+
+GET /gestion/apirest/socio (consultar uno)
+
+DELETE /gestion/apirest/socio(borrar uno)
