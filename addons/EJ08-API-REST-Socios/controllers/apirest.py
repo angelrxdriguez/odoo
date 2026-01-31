@@ -21,56 +21,39 @@ class ApiRest(http.Controller):
     @http.route('/gestion/apirest/<model>', auth="none", cors='*', csrf=False,
                 methods=["POST", "PUT", "PATCH"], type='http')
     def apiPost(self, model, **args):
-        """
-        Crear o modificar un registro del modelo indicado vía API REST.
-        """
-        # Extraemos los datos del parámetro 'data', que es un JSON en formato texto
-        # Intentar leer los datos desde la URL (?data=...) o desde el cuerpo (Body JSON)
+        model = (model or "").strip()  # <-- CLAVE (quita \n, espacios, etc.)
+
+        # Validación de modelo para evitar 500
+        try:
+            Model = request.env[model].sudo()
+        except KeyError:
+            return http.Response(json.dumps({'estado': 'MODELNOTFOUND', 'model': model}),
+                                 status=404, mimetype='application/json')
+
         if 'data' in args:
             dicDatos = json.loads(args['data'])
         else:
             raw_data = request.httprequest.data.decode('utf-8')
             dicDatos = json.loads(raw_data or '{}')
 
-        # Verificamos que se haya enviado un número de socio
         if not dicDatos.get("num_socio"):
             return http.Response(json.dumps({'estado': 'SOCIONOINDICADO'}), status=400, mimetype='application/json')
 
-        # Preparamos el criterio de búsqueda para localizar el socio
         search = [('num_socio', '=', int(dicDatos["num_socio"]))]
 
-        # ----------------------------------------------------------------------
-        # CASO POST → Crear nuevo socio
-        # ----------------------------------------------------------------------
         if request.httprequest.method == 'POST':
-            # Creamos el nuevo registro
-            record = request.env[model].sudo().create(dicDatos)
+            record = Model.create(dicDatos)
+            return http.Response(json.dumps(record.read(), default=str), status=200, mimetype='application/json')
 
-            # Devolvemos los datos creados como JSON
-            return http.Response(
-                json.dumps(record.read(), default=str),
-                status=200,
-                mimetype='application/json'
-            )
-
-        # ----------------------------------------------------------------------
-        # CASO PUT / PATCH → Modificar socio existente
-        # ----------------------------------------------------------------------
         elif request.httprequest.method in ['PUT', 'PATCH']:
-            record = request.env[model].sudo().search(search)
+            record = Model.search(search)
             if record:
                 record[0].write(dicDatos)
-                return http.Response(
-                    json.dumps(record.read(), default=str),
-                    status=200,
-                    mimetype='application/json'
-                )
+                return http.Response(json.dumps(record.read(), default=str), status=200, mimetype='application/json')
             else:
                 return http.Response(json.dumps({'estado': 'NOTFOUND'}), status=404, mimetype='application/json')
 
-        # Si no es ninguno de los métodos esperados, devolvemos sesión
         return request.env['ir.http'].session_info()
-
     # --------------------------------------------------------------------------
     # RUTA PARA: GET (consultar), DELETE (eliminar)
     # --------------------------------------------------------------------------
