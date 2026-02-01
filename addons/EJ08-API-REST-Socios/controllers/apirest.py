@@ -21,9 +21,8 @@ class ApiRest(http.Controller):
     @http.route('/gestion/apirest/<model>', auth="none", cors='*', csrf=False,
                 methods=["POST", "PUT", "PATCH"], type='http')
     def apiPost(self, model, **args):
-        model = (model or "").strip()  # <-- CLAVE (quita \n, espacios, etc.)
+        model = (model or "").strip()  
 
-        # Validación de modelo para evitar 500
         try:
             Model = request.env[model].sudo()
         except KeyError:
