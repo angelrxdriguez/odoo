@@ -5,14 +5,10 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
 
 TOKEN = "8558553993:AAGSo6TDHZnULCLF7dGlB_K1LflYoTOHCwU"
-ODOO_BASE = "http://localhost:8069"  
+ODOO_BASE = "http://localhost:8069"
 API = f"{ODOO_BASE}/gestion/apirest/socio"
 
-def parse_comando(texto: str):
-    """
-    Devuelve: (accion, dicDatos) o (None, None)
-    Soporta: Crear/Modificar/Consultar/Borrar con clave="valor"
-    """
+def comando(texto: str):
     if not texto:
         return None, None
 
@@ -51,9 +47,9 @@ def odoo_borrar(num_socio):
     r = requests.delete(API, params=params, timeout=10)
     return r.status_code, r.text
 
-async def handler_texto(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def lector(update: Update, context: ContextTypes.DEFAULT_TYPE):
     texto = (update.message.text or "").strip()
-    accion, datos = parse_comando(texto)
+    accion, datos = comando(texto)
 
     if accion is None:
         await update.message.reply_text("Orden no soportada")
@@ -66,28 +62,32 @@ async def handler_texto(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         if accion == "crear":
             if not all(k in datos for k in ("num_socio", "nombre", "apellidos")):
-                await update.message.reply_text("Faltan datos. Ej: Crear, nombre=\"A\",apellidos=\"B\", num_socio=\"1\"")
+                await update.message.reply_text(
+                    'Faltan datos. Ej: Crear, nombre="A",apellidos="B", num_socio="1"'
+                )
                 return
             code, body = odoo_crear(datos)
             await update.message.reply_text(f"HTTP {code}\n{body}")
 
         elif accion == "modificar":
             if not all(k in datos for k in ("num_socio", "nombre", "apellidos")):
-                await update.message.reply_text("Faltan datos. Ej: Modificar, nombre=\"A\",apellidos=\"B\", num_socio=\"1\"")
+                await update.message.reply_text(
+                    'Faltan datos. Ej: Modificar, nombre="A",apellidos="B", num_socio="1"'
+                )
                 return
             code, body = odoo_modificar(datos)
             await update.message.reply_text(f"HTTP {code}\n{body}")
 
         elif accion == "consultar":
             if "num_socio" not in datos:
-                await update.message.reply_text("Faltan datos. Ej: Consultar, num_socio=\"1\"")
+                await update.message.reply_text('Faltan datos. Ej: Consultar, num_socio="1"')
                 return
             code, body = odoo_consultar(datos["num_socio"])
             await update.message.reply_text(f"HTTP {code}\n{body}")
 
         elif accion == "borrar":
             if "num_socio" not in datos:
-                await update.message.reply_text("Faltan datos. Ej: Borrar, num_socio=\"1\"")
+                await update.message.reply_text('Faltan datos. Ej: Borrar, num_socio="1"')
                 return
             code, body = odoo_borrar(datos["num_socio"])
             await update.message.reply_text(f"HTTP {code}\n{body}")
@@ -100,7 +100,7 @@ async def handler_texto(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handler_texto))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, lector))
     app.run_polling()
 
 if __name__ == "__main__":
